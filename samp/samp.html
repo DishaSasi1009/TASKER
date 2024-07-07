@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="samp.css">
+    <title>Sign Up</title>
+    <style>
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="cont1">
+            <img class="purp" src="images/todo.png" alt="todo">
+        </div>
+        <div class="cont2">
+            <h1 class="wel">Welcome to Tasker</h1>
+            <p class="pls">Please insert your information to access your tasks</p>
+            <form id="signupForm" onsubmit="return validateForm()">
+                <label for="mail">Email</label><br>
+                <input type="email" name="mail" id="mail" placeholder="Insert your email" required><br><br>
+                <label for="pwd">Password</label><br>
+                <input type="password" name="pwd" id="pwd" placeholder="Insert your password" required><br><br>
+                <input type="checkbox" name="rem" id="rem">
+                <label for="rem">Remember me</label><br><br>
+                <button type="submit" class="Signin">Sign up</button>
+                <p class="acnt"> Already have an account? <a href="signin.html" class="Signup"><b>Sign in</b></a></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function validateForm() {
+            var email = document.getElementById("mail").value;
+            var password = document.getElementById("pwd").value;
+            var isValid = true;
+
+            // Simple email validation
+            if (!isValidEmail(email)) {
+                isValid = false;
+                document.getElementById("mail").classList.add("error");
+            } else {
+                document.getElementById("mail").classList.remove("error");
+            }
+
+            // Simple password validation (minimum 6 characters)
+            if (password.length < 6) {
+                isValid = false;
+                document.getElementById("pwd").classList.add("error");
+            } else {
+                document.getElementById("pwd").classList.remove("error");
+            }
+
+            // If form is valid, save to local storage
+            if (isValid) {
+                saveToLocalStorage(email, password);
+            }
+
+            return isValid;
+        }
+
+        function isValidEmail(email) {
+            var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return regex.test(email);
+        }
+
+        function saveToLocalStorage(email, password) {
+            var users = JSON.parse(localStorage.getItem("users")) || [];
+
+            // Check if email already exists
+            var existingUser = users.find(function(user) {
+                return user.email === email;
+            });
+
+            if (existingUser) {
+                alert("Email already exists. Please sign in.");
+                return;
+            }
+
+            // Add new user
+            users.push({ email: email, password: password, tasks: [] });
+            localStorage.setItem("users", JSON.stringify(users));
+
+            alert("Account created successfully!");
+
+            // Redirect to sign-in page (optional)
+            window.location.href = "signin.html";
+        }
+    </script>
+</body>
+</html>

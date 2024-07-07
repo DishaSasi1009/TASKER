@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="samp.css">
+    <title>Sign In</title>
+    <style>
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="cont1">
+            <img class="purp" src="images/todo.png" alt="todo">
+        </div>
+        <div class="cont2">
+            <h1 class="wel">Welcome back to Tasker</h1>
+            <p class="pls">Please sign in to access your tasks</p>
+            <form id="signInForm" onsubmit="return signIn()">
+                <label for="signinMail">Email</label><br>
+                <input type="email" name="mail" id="mail" placeholder="Enter your email" required><br><br>
+                <label for="signinPwd">Password</label><br>
+                <input type="password" name="signinPwd" id="pwd" placeholder="Enter your password" required><br><br>
+                <button type="submit" class="Signin">Sign in</button>
+                <p class="acnt">Don't have an account? <a href="samp.html"><b>Sign up</b></a></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function signIn() {
+            var email = document.getElementById("mail").value;
+            var password = document.getElementById("pwd").value;
+            var users = JSON.parse(localStorage.getItem("users")) || [];
+
+            // Check if there's a matching user
+            var matchedUser = users.find(function(user) {
+                return user.email === email && user.password === password;
+            });
+
+            if (matchedUser) {
+                alert("Sign in successful!");
+
+                // Store current user in localStorage for session management
+                localStorage.setItem("currentUser", JSON.stringify(matchedUser));
+
+                // Redirect to task page
+                window.location.href = "home.html";
+                
+                return false; // Prevent form submission
+            } else {
+                alert("Invalid email or password. Please try again.");
+                return false; // Prevent form submission
+            }
+        }
+    </script>
+</body>
+</html>
